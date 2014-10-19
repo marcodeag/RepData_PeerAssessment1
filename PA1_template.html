@@ -211,7 +211,7 @@ DataMeanStepPerInterval[is.na(DataMeanStepPerInterval$steps),1] &lt;-
                         ,1:3]</code></pre>
 <pre><code>##   steps       date interval
 ## 1 1.717 2012-10-01        0</code></pre>
-<p>The sum of total steps for each, the mean and median of total steps are calculated</p>
+<p>The sum of total steps for each day, the mean and the median of total steps are calculated</p>
 <pre class="r"><code>## Calculating sum steps for each day using step filled dataframe
 SumDataMeanStepPerInterval &lt;-ddply(DataMeanStepPerInterval,
                                    .(date),
@@ -240,15 +240,15 @@ ggplot(SumDataMeanStepPerInterval, aes(x=date, y=TotalStepsPerDay)) +
 NaRecPerc &lt;- round((TotalNumbMissingValues / totalRow) * 100)
 ## Calculating the difference between the mean of total steps per day computed with 
 ## NA filled dataframe and NA escluded dataframe
-DeltaMeanTotalSteps &lt;- round(MeanTotalStepPerDayNAFilled - MeanTotalStepPerDay)
+DeltaMeanTotalSteps &lt;- round(MeanTotalStepPerDayNAFilled - MeanTotalStepPerDay, 2)
 ## Calculating the difference between the median of total steps per day computed with 
 ## NA filled dataframe and NA escluded dataframe
-DeltaMedianTotalSteps &lt;- round(MedianTotalStepPerDayNAFilled - MedianTotalStepPerDay)</code></pre>
+DeltaMedianTotalSteps &lt;- round(MedianTotalStepPerDayNAFilled - MedianTotalStepPerDay, 2)</code></pre>
 <p>Final findings:</p>
 <ul>
 <li>The NA-steps records represent the 13% of total records</li>
 <li>The impact on the elaboration of the mean total steps number across all days is not relevant (difference is equal to 0 days)</li>
-<li>The impact on the elaboration of the median total steps number across all days is not relevant (difference is equal to 1 day)</li>
+<li>The impact on the elaboration of the median total steps number across all days is not relevant (difference is equal to 1.19 days)</li>
 </ul>
 </div>
 <div id="are-there-differences-in-activity-patterns-between-weekdays-and-weekends" class="section level2">

@@ -270,7 +270,7 @@ DataMeanStepPerInterval[DataMeanStepPerInterval$date %in% DataNA[1,2] &
 ## 1 1.717 2012-10-01        0
 ```
 
-The sum of total steps for each, the mean and median of total steps are calculated
+The sum of total steps for each day, the mean and the median of total steps are calculated
 
 ```r
 ## Calculating sum steps for each day using step filled dataframe
@@ -324,10 +324,10 @@ Elaboration of some "metric" reported in final findings:
 NaRecPerc <- round((TotalNumbMissingValues / totalRow) * 100)
 ## Calculating the difference between the mean of total steps per day computed with 
 ## NA filled dataframe and NA escluded dataframe
-DeltaMeanTotalSteps <- round(MeanTotalStepPerDayNAFilled - MeanTotalStepPerDay)
+DeltaMeanTotalSteps <- round(MeanTotalStepPerDayNAFilled - MeanTotalStepPerDay, 2)
 ## Calculating the difference between the median of total steps per day computed with 
 ## NA filled dataframe and NA escluded dataframe
-DeltaMedianTotalSteps <- round(MedianTotalStepPerDayNAFilled - MedianTotalStepPerDay)
+DeltaMedianTotalSteps <- round(MedianTotalStepPerDayNAFilled - MedianTotalStepPerDay, 2)
 ```
 
 Final findings:
@@ -336,7 +336,7 @@ Final findings:
 * The impact on the elaboration of the mean total steps number across all days 
 is not relevant (difference is equal to 0 days)
 * The impact on the elaboration of the median total steps number across all days 
-is not relevant (difference is equal to 1 day)
+is not relevant (difference is equal to 1.19 days)
 
 
 ## *Are there differences in activity patterns between weekdays and weekends?*
