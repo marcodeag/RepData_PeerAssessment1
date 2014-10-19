@@ -1,15 +1,7 @@
----
-title: "Reproducible Research: Peer Assessment 1"
-output: 
-  html_document:
-    keep_md: true
----
+# Reproducible Research: Peer Assessment 1
 *by Marco De Agostini, October 2014*
 
-```{r setoptions,echo=FALSE}
-library("knitr")
-opts_chunk$set(echo=TRUE)
-```
+
 
 ## *Introduction*
 The document has the aim to show the analysis required by Peer Assignment 1 of
@@ -33,7 +25,8 @@ data: checking if the *Activity.csv* required file is available,
 downloading and unpacking the remote archive file otherwise. 
 Finally the sourcing data set is loaded.
 
-```{r Loading Procedure_stepA}
+
+```r
 ## Check sourcing file
 ## if no file is found, remote archive file is downloaded and unzipped
 if (!file.exists("activity.csv")) { 
@@ -47,22 +40,44 @@ Data <- read.table("activity.csv", sep = ",", header = TRUE, na.strings = "NA")
 
 The loaded data set looks like:
 
-```{r Loading Procedure_stepB}
+
+```r
 totalRow <- nrow(Data)
 head(Data)
 ```
 
-It contains `r totalRow` rows and the variables:
+```
+##   steps       date interval
+## 1    NA 2012-10-01        0
+## 2    NA 2012-10-01        5
+## 3    NA 2012-10-01       10
+## 4    NA 2012-10-01       15
+## 5    NA 2012-10-01       20
+## 6    NA 2012-10-01       25
+```
+
+It contains 17568 rows and the variables:
 
 * **steps**: Number of steps taking in a 5-minute interval (missing values are coded as NA)
 * **date**: The date on which the measurement was taken in YYYY-MM-DD format
 * **interval**: Identifier for the 5-minute interval in which measurement was taken
 
 A new data set containing only the not NA steps in then computed.
-```{r Loading Procedure_stepC}
+
+```r
 ## Creating Data set without NA step values
 DataNotNA <- Data[!is.na(Data$steps),]
 head(DataNotNA)
+```
+
+```
+##     steps       date interval
+## 289     0 2012-10-02        0
+## 290     0 2012-10-02        5
+## 291     0 2012-10-02       10
+## 292     0 2012-10-02       15
+## 293     0 2012-10-02       20
+## 294     0 2012-10-02       25
 ```
 
 ## *What is mean total number of steps taken per day?*
@@ -70,7 +85,8 @@ The mean and median of total number of steps taken per day are obtained
 using the not-NA-step dataframe, calculating the sum of total step for each day 
 (see graph below) and finally computing the mean and the median along all the days.
 
-```{r Plotting_sum_per_day_calculating_mean_median}
+
+```r
 ## Loading plyr library, summerizing steps for each date on DataNotNA dataframe
 library(plyr)
 SumStepsDataNotNA <-ddply(DataNotNA,.(date),summarize,TotalStepsPerDay=sum(steps))
@@ -85,23 +101,36 @@ ggplot(SumStepsDataNotNA, aes(x=date, y=TotalStepsPerDay)) +
         ylab("Total steps per day") +
         ggtitle("Total steps per day") +
         theme(axis.text.x = element_text(size = 7,angle = 90, hjust = 1))
+```
 
+![plot of chunk Plotting_sum_per_day_calculating_mean_median](./PA1_template_files/figure-html/Plotting_sum_per_day_calculating_mean_median.png) 
+
+```r
 ## Calculating number of days, mean and median
 NumDayNotNA <- nrow(SumStepsDataNotNA)
 MeanTotalStepPerDay <- mean(SumStepsDataNotNA$TotalStepsPerDay)
 MedianTotalStepPerDay <- median(SumStepsDataNotNA$TotalStepsPerDay)
-
 ```
 
-Considering the `r NumDayNotNA` days with not-NA-steps, the mean of total 
+Considering the 53 days with not-NA-steps, the mean of total 
 steps per day is:
-```{r Printing_Mean_Step_Per_Day_NotNA}
+
+```r
 MeanTotalStepPerDay
 ```
 
+```
+## [1] 10766
+```
+
 while the median is:
-```{r Printing_Median_Step_Per_Day_NotNA}
+
+```r
 MedianTotalStepPerDay
+```
+
+```
+## [1] 10765
 ```
 
 ## *What is the average daily activity pattern?*
@@ -111,7 +140,8 @@ total number of steps graph.
 
 The elaboration of the average number of steps for each interval across all the days:
 
-```{r Computing_Mean_Step_per_Interval}
+
+```r
 ## Computing Mean Step per each interval across all days 
 ## and identifying the max mean steps interval
 MeanStepPerIntervalNotNA <-ddply(DataNotNA,
@@ -122,17 +152,29 @@ MeanStepPerIntervalNotNA <-ddply(DataNotNA,
 
 The dataframe with average number of steps looks like:
 
-```{r Mean_step_per_interval_dataframe}
+
+```r
 totalRowAD <- nrow(MeanStepPerIntervalNotNA)
 head(MeanStepPerIntervalNotNA)
 ```
 
-and it contains `r totalRowAD` rows (one for each 5-minutes interval in a day).
+```
+##   interval MeanStepPerInterval
+## 1        0             1.71698
+## 2        5             0.33962
+## 3       10             0.13208
+## 4       15             0.15094
+## 5       20             0.07547
+## 6       25             2.09434
+```
+
+and it contains 288 rows (one for each 5-minutes interval in a day).
 
 The time series plot of the 5-minute interval (x-axis) and the average number of
 steps taken, averaged across all days (y-axis)
 
-```{r Plotting_Mean_Step_per_Interval}
+
+```r
 ## Time series plot of the 5-minute interval (x-axis) 
 ## and the average number of steps taken, averaged across all days (y-axis)
 library(scales)
@@ -155,8 +197,11 @@ ggplot(MeanStepPerIntervalNotNA, aes(x=interval, y=MeanStepPerInterval)) +
         theme(axis.text.x = element_text(size = 7,angle = 90, hjust = 1))
 ```
 
+![plot of chunk Plotting_Mean_Step_per_Interval](./PA1_template_files/figure-html/Plotting_Mean_Step_per_Interval.png) 
+
 The interval with the maximum number of step is:
-```{r Calculating_the_mean_max_step_interval}
+
+```r
 MaxStepPerIntervalNotNa <- max(MeanStepPerIntervalNotNA$MeanStepPerInterval)
 IntervalMaxStepNotNA <- 
         MeanStepPerIntervalNotNA[MeanStepPerIntervalNotNA$MeanStepPerInterval == 
@@ -164,23 +209,33 @@ IntervalMaxStepNotNA <-
 IntervalMaxStepNotNA
 ```
 
+```
+## [1] 835
+```
+
 ## *Imputing missing values*
 The original data set contains many rows with NA-data for the *step* variable.
 Below an evaluation of the impacts of the NA-data step presence.
 
 First the count of NA-step rows; the NA-step rows are:
-```{r NAStepRows}
+
+```r
 ## Calculating the total number of missing values in the dataset 
 DataNA <- Data[is.na(Data$steps),]
 TotalNumbMissingValues <- nrow(DataNA)
 TotalNumbMissingValues
 ```
 
+```
+## [1] 2304
+```
+
 Then a new data set is calculated, filling the NA-step data. The strategy
 adopted to fill the NA-step data consists into replace the NA values with the 
 mean total step number for the associated 5-minute interval.
 
-```{r Filling_missing_value}
+
+```r
 ## Joining the dataframe "Data" containing all the observations and mean 
 ## step per interval dataframe; the ipothesis is that for
 ## each day at the same hour an indvidual does the same activity
@@ -192,19 +247,32 @@ DataMeanStepPerInterval[is.na(DataMeanStepPerInterval$steps),1] <-
 ```
 
 Below an exaple of NA-step data, from the original data
-```{r ExampleOfNAData}
+
+```r
 DataNA[1,]
 ```
 
+```
+##   steps       date interval
+## 1    NA 2012-10-01        0
+```
+
 And the same observtion after the filling strategy has been applied
-```{r ExampleOfNAData2}
+
+```r
 DataMeanStepPerInterval[DataMeanStepPerInterval$date %in% DataNA[1,2] & 
                         DataMeanStepPerInterval$interval %in% DataNA[1,3]
                         ,1:3]
 ```
 
+```
+##   steps       date interval
+## 1 1.717 2012-10-01        0
+```
+
 The sum of total steps for each, the mean and median of total steps are calculated
-```{r Sum_mean_with_filled_df}
+
+```r
 ## Calculating sum steps for each day using step filled dataframe
 SumDataMeanStepPerInterval <-ddply(DataMeanStepPerInterval,
                                    .(date),
@@ -216,7 +284,8 @@ MedianTotalStepPerDayNAFilled <- median(SumDataMeanStepPerInterval$TotalStepsPer
 ```
 
 The graph of the total number of steps taken each day is shown below:
-```{r Plot_Sum_mean_with_filled_df}
+
+```r
 ## Plotting total steps per day using step filled dataframe
 ggplot(SumDataMeanStepPerInterval, aes(x=date, y=TotalStepsPerDay)) + 
         geom_bar(stat="identity", position=position_dodge(),fill = "green4", alpha = .5) +
@@ -226,18 +295,31 @@ ggplot(SumDataMeanStepPerInterval, aes(x=date, y=TotalStepsPerDay)) +
         theme(axis.text.x = element_text(size = 7,angle = 90, hjust = 1))
 ```
 
+![plot of chunk Plot_Sum_mean_with_filled_df](./PA1_template_files/figure-html/Plot_Sum_mean_with_filled_df.png) 
+
 The mean of total steps numer calculated using the filled-NA step dataset is:
-```{r Mean_filled_ds}
+
+```r
 MeanTotalStepPerDayNAFilled
 ```
 
+```
+## [1] 10766
+```
+
 While the median is:
-```{r Median_filled_ds}
+
+```r
 MedianTotalStepPerDayNAFilled
 ```
 
+```
+## [1] 10766
+```
+
 Elaboration of some "metric" reported in final findings:
-```{r Final_Findings}
+
+```r
 ## Percentage of NA records
 NaRecPerc <- round((TotalNumbMissingValues / totalRow) * 100)
 ## Calculating the difference between the mean of total steps per day computed with 
@@ -250,11 +332,11 @@ DeltaMedianTotalSteps <- round(MedianTotalStepPerDayNAFilled - MedianTotalStepPe
 
 Final findings:
 
-* The NA-steps records represent the `r NaRecPerc`% of total records
+* The NA-steps records represent the 13% of total records
 * The impact on the elaboration of the mean total steps number across all days 
-is not relevant (difference is equal to `r DeltaMeanTotalSteps` days)
+is not relevant (difference is equal to 0 days)
 * The impact on the elaboration of the median total steps number across all days 
-is not relevant (difference is equal to `r DeltaMedianTotalSteps` day)
+is not relevant (difference is equal to 1 day)
 
 
 ## *Are there differences in activity patterns between weekdays and weekends?*
@@ -264,9 +346,17 @@ during the weekdays and weekend days is analyzed.
 First a factor variable is added to the data set to distinguish weekdays and
 weekend days
 
-```{r Adding_factor_wd_we}
+
+```r
 ## Changig local settings to obtain english week-days
 Sys.setlocale("LC_TIME", "English")
+```
+
+```
+## [1] "English_United States.1252"
+```
+
+```r
 DataMeanStepPerInterval$date <- as.Date(DataMeanStepPerInterval$date)
 ## Building weekday and weekend sets
 weekend <- c("Saturday","Sunday")
@@ -277,7 +367,8 @@ DataMeanStepPerInterval[weekdays(DataMeanStepPerInterval$date) %in% weekend,]$da
 ```
 
 Then weekday and weekend days activity patterns are plotted and compared
-```{r Plotting_the_Activity_pattern_wd_we}
+
+```r
 MeanStepPerIntervalweekday <-ddply(
         DataMeanStepPerInterval[DataMeanStepPerInterval$daytype == "weekday",],
         .(interval),
@@ -294,6 +385,13 @@ MeanStepPerIntervalweekend <-ddply(
 ## and the average number of steps taken, averaged across 
 ## weekday days (plotweekday) and weekend days (plotweekend)
 library(gridExtra)
+```
+
+```
+## Loading required package: grid
+```
+
+```r
 plotweekday <- ggplot(MeanStepPerIntervalweekday, aes(x=interval, y=MeanStepPerInterval)) + 
         geom_line(colour = "#009E73") +
         xlab("5 minutes interval") +
@@ -312,6 +410,8 @@ plotweekend <- ggplot(MeanStepPerIntervalweekend, aes(x=interval, y=MeanStepPerI
 
 grid.arrange (plotweekday, plotweekend, nrow = 2, ncol=1)
 ```
+
+![plot of chunk Plotting_the_Activity_pattern_wd_we](./PA1_template_files/figure-html/Plotting_the_Activity_pattern_wd_we.png) 
 
 By means of a qualitative analysis of the individual activity pattern, the major findings obtained by the comparison of weekday and weekend days behavior are:
 
