@@ -37,8 +37,8 @@ Finally the sourcing data set is loaded.
 ## Check sourcing file
 ## if no file is found, remote archive file is downloaded and unzipped
 if (!file.exists("activity.csv")) { 
-        fileUrl <- "https://d396qusza40orc.cloudfront.net/repdata%2Fdata%2Factivity.zip"
-        download.file(fileUrl, destfile = "activity.zip", method="curl")
+        fileUrl <- "http://d396qusza40orc.cloudfront.net/repdata%2Fdata%2Factivity.zip"
+        download.file(fileUrl,"activity.zip", mode="wb")
         unzip("activity.zip")           
 }
 ## Reading sourcing file, na character set to "NA"
